@@ -43,7 +43,7 @@ class Program {
         Arrays.sort(denoms);
         if (denoms[0] > n) throw new RuntimeException("input is invalid");
         for (int i = 0; i < denoms.length; i++) {
-            combination.add(searchCombinations1(n, denoms, i));
+            combination.add(searchCombinations1(n,denoms, i));
         }
         printCombinations(combination);
         return combination.size();
