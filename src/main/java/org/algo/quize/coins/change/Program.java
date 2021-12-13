@@ -37,65 +37,48 @@ class Program {
     }
 
     static int deepness = 0;
-    static ArrayList<Combination> combination = new ArrayList<>();
+    static ArrayList<Combination> combinations = new ArrayList<>();
+    static Combination comb;
+    Combination comb = new Combination();
     public static int numberOfWaysToMakeChange(int n, int[] denoms) {
 
         Arrays.sort(denoms);
         if (denoms[0] > n) throw new RuntimeException("input is invalid");
         for (int i = 0; i < denoms.length; i++) {
-            combination.add(searchCombinations1(n,denoms, i));
+            comb = new Combination();
+            searchCombinations(n,denoms, i);
+            combinations.add(comb);
         }
-        printCombinations(combination);
-        return combination.size();
+        printCombinations(combinations);
+        return combinations.size();
     }
 
-    private static Combination searchCombination(int n, int[] denoms, int currentCoinIndex) {
+    private static int[] searchCombinations(int n, int[] denoms, int currentCoinIndex) {
         deepness++;
-        Combination comb = new Combination();
+
         int coin = denoms[currentCoinIndex];
         int reminder = n % coin;
         int wholePart = n / coin;
         if (reminder == 0) {
-            if
+            if (currentCoinIndex > 0 ) {
+                for (int k=1; k<wholePart; k++) {
+                    comb.addPortion(searchCombinations(n-k*coin, denoms,currentCoinIndex-1));
+                }
+            }
         }
         else {
             if (currentCoinIndex > 0) {
-
+                comb.addPortion(searchCombinations(reminder,denoms,currentCoinIndex-1));
             }
             else {
-
+                throw new RuntimeException("Cannot build coins combination");
             }
         }
+        return new int[] {coin,wholePart}
         deepness--;
     }
 
-    private static Combination searchCombinations1(int n, int[] denoms, int currentCoinIndex, ArrayList<Combination> combinations) {
-        deepness++;
-        Combination comb = new Combination();
-        int coin = denoms[currentCoinIndex];
-        int reminder = n % coin;
-        int wholePart = n / coin;
-        ArrayList<int[]> x;
-        comb.addPortion(new int[]{coin, wholePart});
-        if (currentCoinIndex > 0) currentCoinIndex--;
-        else {
-            if (reminder > 0) throw new RuntimeException("Unable to get " + n + " by given coins representation");
-            return comb;
-        }
-        if (reminder == 0) {
-            for (int k = 1; k <= wholePart - 1; k++) {
-                ArrayList<int[]> y = new ArrayList<>();
-                y.add(new int[]{coin, k});
-                y.addAll(searchCombinations(n - k * coin, denoms, currentCoinIndex, combinations));
-                combinations.add(y);
-            }
-        }
 
-
-        }
-        deepness--;
-        return comb;
-    }
 
 
     private static void printCombinations(ArrayList<Combination> comb) {
